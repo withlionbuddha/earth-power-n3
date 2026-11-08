@@ -384,3 +384,40 @@ html,body,#root,.app-shell,.book-zone,.book,.book-page {overscroll-behavior:none
   .bottom-menu .menu-links {width:auto;}
   .bottom-menu .login-notice {left:calc(23px + 4px);width:calc(100% - 23px - 4px - 24px);height:27px;padding:0 5px;font-size:9px;}
 }
+
+
+/* Warning popup sits directly above the input and matches its exact width. */
+.bottom-menu .login-field {position:relative;display:flex;flex:1 1 0;min-width:0;}
+.bottom-menu .login-field > input {box-sizing:border-box;width:100%;flex:1 1 auto;min-width:0;}
+.bottom-menu .login-field > .login-notice {
+  position:absolute;
+  left:0;
+  right:0;
+  top:auto;
+  bottom:calc(100% + 8px);
+  transform:none;
+  width:100%;
+  min-width:0;
+  max-width:none;
+  height:auto;
+  min-height:32px;
+  padding:9px 10px;
+  box-sizing:border-box;
+  display:block;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  overflow:visible;
+  text-overflow:clip;
+  background:var(--theme-dock);
+  border:1px solid #ffffff55;
+  border-radius:6px;
+  box-shadow:0 5px 20px #0003;
+  color:var(--theme-dock-text);
+  font-size:10px;
+  line-height:1.4;
+  cursor:pointer;
+  z-index:25;
+}
+@media(max-width:650px) {
+  .bottom-menu .login-field > .login-notice {min-height:27px;padding:7px 6px;font-size:9px;}
+}
