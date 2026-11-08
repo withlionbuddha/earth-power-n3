@@ -119,7 +119,7 @@ export default function App() {
     <div className="ambient-ring" aria-hidden="true"/>
     <section className="top-zone">
       <header className="topbar"><a className="brand" href="#home" onClick={e => { e.preventDefault(); navigate('home') }}><span className="brand-circle">e<span>.</span></span><strong>earth power <i>/ n3</i></strong></a><span className="topbar-center">A DIGITAL THINKING SPACE &nbsp; ✳</span><span className="topbar-end"><span className="status-dot"/> EXPLORATION MODE</span></header>
-      <div className="top-content"><div className="top-kicker">THE NEW CREATIVE WORKSPACE <span>——</span> EDITION 001</div><div className="hero-row"><h1>Think beyond<br/><em>the ordinary.</em></h1><p>For the curious, the makers,<br/>and the questions yet to be asked.</p></div><div className="hero-footer"><span>EVERY IDEA DESERVES A SPACE</span><span>DISCOVER YOUR NEXT CHAPTER &nbsp; ↗</span></div></div>
+      
     </section>
     <section className="book-zone" aria-label="Interactive content pages">
       <div className="book-shadow"/>
