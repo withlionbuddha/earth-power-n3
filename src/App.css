@@ -286,8 +286,6 @@ html,body,#root,.app-shell,.book-zone,.book,.book-page {overscroll-behavior:none
 .bottom-menu {display:flex;align-items:center;}
 .menu-login {flex:1 1 0;min-width:0;gap:10px;}
 .login-form {flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:6px;}
-.login-form input
-
 .login-form input {box-sizing:border-box;flex:1 1 auto;width:100%;min-width:0;height:32px;padding:0 10px;}
 .login-form button,
 .login-form button:hover {flex:0 0 auto;background:transparent;border:0;border-radius:0;box-shadow:none;padding:3px 5px;font-size:22px;font-weight:800;line-height:1;color:var(--theme-dock-text);filter:none;}
@@ -314,4 +312,48 @@ html,body,#root,.app-shell,.book-zone,.book,.book-page {overscroll-behavior:none
   .bottom-menu .menu-login {gap:4px;}
   .bottom-menu .menu-links {width:auto;gap:0;}
   .bottom-menu .menu-links button {padding-inline:3px;}
+}
+
+/* Align Home with the centered Overview page indicator.
+   The shared command/login field occupies the entire left half. */
+.bottom-menu {position:fixed;justify-content:initial;}
+.bottom-menu .menu-login {
+  flex:0 0 calc(50% - 16px);
+  width:calc(50% - 16px);
+  min-width:0;
+}
+.bottom-menu .menu-links {
+  position:absolute;
+  left:50%;
+  right:8px;
+  width:auto;
+  margin:0;
+  justify-content:flex-start;
+  overflow:hidden;
+}
+.bottom-menu .login-form {width:100%;min-width:0;}
+.bottom-menu .login-form input {
+  width:100%;
+  min-width:0;
+  flex:1 1 0;
+  text-overflow:ellipsis;
+}
+.bottom-menu .login-form input::placeholder {
+  font-size:clamp(9px,1vw,11px);
+  text-overflow:ellipsis;
+  color:#f3d7d2;
+  opacity:1;
+}
+.login-status-a11y {
+  position:absolute;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+  clip-path:inset(50%);
+  white-space:nowrap;
+}
+@media(max-width:650px) {
+  .bottom-menu .menu-login {flex-basis:calc(50% - 7px);width:calc(50% - 7px);}
+  .bottom-menu .menu-links {left:50%;right:3px;}
+  .bottom-menu .login-form input::placeholder {font-size:9px;}
 }
