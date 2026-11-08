@@ -105,3 +105,19 @@
   .cards {margin-top:10px;}
   .cards button {min-height:74px;padding:8px;}
 }
+
+/* Compact header and viewport-locked book: no outer page scrolling. */
+html,body,#root {height:100%;min-height:0;overflow:hidden;}
+.app-shell {height:100dvh;min-height:0;grid-template-rows:auto minmax(0,1fr);overflow:hidden;}
+.top-zone {height:auto;min-height:0;padding:0 clamp(18px,4vw,64px);}
+.topbar {height:clamp(40px,6vh,58px);min-height:0;flex-shrink:0;}
+.book-zone {height:100%;min-height:0;overflow:hidden;padding:6px clamp(12px,4.5vw,82px) 58px;justify-content:flex-start;}
+.book {height:100%;min-height:0;max-height:100%;flex:1 1 auto;}
+.page-inner {min-height:0;max-height:100%;overflow-y:auto;overflow-x:hidden;}
+.book-shadow {bottom:55px;}
+@media(max-width:650px) {
+  .top-zone {height:auto;min-height:0;padding:0 12px;}
+  .topbar {height:42px;min-height:0;}
+  .book-zone {height:100%;min-height:0;padding:4px 8px 51px;}
+  .book {height:100%;min-height:0;max-height:100%;}
+}
