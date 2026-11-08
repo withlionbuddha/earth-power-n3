@@ -497,3 +497,31 @@ html,body,#root,.app-shell,.book-zone,.book,.book-page {overscroll-behavior:none
   .bottom-menu {grid-template-columns:minmax(0,1fr) auto;column-gap:4px;}
   .bottom-menu .menu-links {grid-column:2;margin:0;justify-content:flex-start;}
 }
+
+
+/* Exact Overview alignment: JS measures the label's left edge. */
+.bottom-menu {display:flex;align-items:center;position:fixed;gap:0;}
+.bottom-menu .menu-links {
+  position:absolute;
+  left:var(--home-start, 50%);
+  right:8px;
+  top:50%;
+  transform:translateY(-50%);
+  display:flex;
+  width:auto;
+  min-width:0;
+  margin:0;
+  justify-content:flex-start;
+  overflow:visible;
+}
+.bottom-menu .menu-login {
+  flex:none;
+  width:calc(var(--home-start, 50%) - 12px);
+  min-width:0;
+}
+.bottom-menu .login-form,
+.bottom-menu .login-field {min-width:0;}
+@media(max-width:650px) {
+  .bottom-menu .menu-login {width:calc(var(--home-start, 50%) - 5px);}
+  .bottom-menu .menu-links {left:var(--home-start, 50%);right:3px;}
+}
