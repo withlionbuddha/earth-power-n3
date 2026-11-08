@@ -421,3 +421,44 @@ html,body,#root,.app-shell,.book-zone,.book,.book-page {overscroll-behavior:none
 @media(max-width:650px) {
   .bottom-menu .login-field > .login-notice {min-height:27px;padding:7px 6px;font-size:9px;}
 }
+
+
+/* Restore the original right-side navigation position.
+   The login field fills only the space left of Home. */
+.bottom-menu {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.bottom-menu .menu-login {
+  position:relative;
+  display:flex;
+  flex:1 1 0;
+  width:auto;
+  min-width:0;
+}
+.bottom-menu .menu-links {
+  position:static;
+  display:flex;
+  flex:0 0 auto;
+  grid-column:auto;
+  left:auto;
+  right:auto;
+  width:auto;
+  min-width:0;
+  margin-left:auto;
+  justify-content:flex-end;
+  overflow:visible;
+}
+.bottom-menu .login-form {display:flex;flex:1 1 auto;min-width:0;}
+.bottom-menu .login-field {flex:1 1 auto;min-width:0;}
+@media(max-width:950px) {
+  .bottom-menu {gap:6px;}
+  .bottom-menu .menu-links {position:static;width:auto;margin-left:auto;justify-content:flex-end;}
+}
+@media(max-width:650px) {
+  .bottom-menu {gap:4px;}
+  .bottom-menu .menu-login {flex:1 1 0;width:auto;min-width:0;}
+  .bottom-menu .menu-links {position:static;width:auto;margin-left:auto;justify-content:flex-end;}
+}
