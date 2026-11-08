@@ -97,6 +97,8 @@ export default function App() {
     setTheme(next)
     try { window.localStorage.setItem(themeStorageKey, next) } catch { /* Storage may be disabled. */ }
   }
+  const [loginId, setLoginId] = useState('')
+  const [loginNotice, setLoginNotice] = useState('')
   const [current, setCurrent] = useState<PageId>('home')
   const [visible, setVisible] = useState<PageId>('home')
   const [subpage, setSubpage] = useState(0)
@@ -169,6 +171,6 @@ export default function App() {
     </section>
     {Array.from({ length: 4 }, (_, i) => <section key={i} className="empty-screen screen-panel" aria-label={`Empty full screen ${i + 1}`}><span className="empty-screen-label">CANVAS 0{i + 2}</span></section>)}
     </div>
-    <nav className="bottom-menu" aria-label="Main navigation"><span className="menu-identity"><b>e.</b><span>THE WORKSPACE</span></span><div className="menu-links">{sections.map((s, i) => <button key={s.id} aria-current={current === s.id ? 'page' : undefined} className={current === s.id ? 'active' : ''} onClick={() => { navigate(s.id); goScreen(i) }}><small>0{i + 1}</small><span>{s.label}</span></button>)}</div><span className="menu-end">EXPLORE &nbsp; ✳</span></nav>
+    <nav className="bottom-menu" aria-label="Main navigation"><div className="menu-login"><span className="menu-mark" aria-label="Earth Power">e.</span><form className="login-form" onSubmit={event => { event.preventDefault(); setLoginNotice(loginId.trim() ? 'Login API is not connected yet.' : 'Please enter your ID.') }}><input aria-label="Login ID" autoComplete="username" placeholder="Login ID" value={loginId} onChange={event => { setLoginId(event.target.value); setLoginNotice('') }}/><button type="submit">Enter</button></form>{loginNotice && <span className="login-notice" role="status">{loginNotice}</span>}</div><div className="menu-links">{sections.map((s, i) => <button key={s.id} aria-current={current === s.id ? 'page' : undefined} className={current === s.id ? 'active' : ''} onClick={() => { navigate(s.id); goScreen(i) }}><small>0{i + 1}</small><span>{s.label}</span></button>)}</div><span className="menu-end">EXPLORE &nbsp; ✳</span></nav>
   </div>
 }
