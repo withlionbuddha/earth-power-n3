@@ -155,3 +155,50 @@ html,body,#root {height:100%;min-height:0;overflow:hidden;}
   .book {width:100%;max-width:100%;}
   .bottom-menu {width:calc(100% - 16px);}
 }
+
+/* No vertical scrolling: fit the page content above a reserved footer. */
+html,body,#root,.app-shell,.book-zone,.book,.book-page {overscroll-behavior:none;}
+.book-page {display:grid;grid-template-rows:minmax(0,1fr) 35px;overflow:hidden;}
+.book-page .page-inner {height:100%;min-height:0;max-height:none;overflow:hidden;padding:clamp(12px,2vh,28px) clamp(14px,2.6vw,38px) 8px;display:flex;flex-direction:column;}
+.book-page .page-footer {position:static;left:auto;right:auto;bottom:auto;height:35px;min-height:35px;margin:0 clamp(14px,2.6vw,38px);padding:0;border-top:1px solid #e4e0d6;}
+.home-intro {padding-top:clamp(8px,2vh,22px);min-height:0;}
+.home-intro h2 {font-size:clamp(27px,3vw,46px);margin:clamp(7px,1.5vh,15px) 0;}
+.home-intro p {margin:6px 0;line-height:1.5;}
+.home-intro .action {margin-top:clamp(8px,1.5vh,14px);padding:10px 14px;}
+.cards {margin-top:auto;padding-top:8px;gap:7px;min-height:0;}
+.cards button {min-height:0;padding:9px 10px;gap:4px;}
+.cards button>span {line-height:1.2;}
+.section-title {font-size:clamp(27px,3vw,46px);margin:clamp(8px,2vh,18px) 0 9px;}
+.section-subtitle {margin-bottom:12px;}
+.theme-grid {min-height:0;overflow:hidden;gap:6px;}
+.theme-option {padding:7px;}
+.theme-heading {margin:12px 0 7px;}
+.demo-caption {margin-top:10px;}
+.file-list {min-height:0;overflow:hidden;}
+.file-row {padding:9px 0;}
+.chat {min-height:0;flex:1;overflow:hidden;}
+.chat-body {min-height:0;max-height:none;flex:1;overflow:hidden;}
+.chart {min-height:0;overflow:hidden;}
+@media(max-height:750px) {
+  .book-page .page-inner {padding-top:10px;padding-bottom:5px;}
+  .home-intro {padding-top:5px;}
+  .asterisk {width:32px;height:32px;font-size:21px;}
+  .home-intro h2,.section-title {font-size:clamp(24px,2.8vw,38px);margin:7px 0;}
+  .home-intro p,.section-subtitle {font-size:10px;line-height:1.35;}
+  .cards {gap:4px;padding-top:4px;}
+  .cards button {padding:7px;gap:2px;}
+  .cards button>span {display:none;}
+  .file-row {padding:6px 0;}
+  .theme-option {padding:5px;}
+}
+@media(max-width:650px) {
+  .book-page .page-inner {padding:10px 9px 5px;}
+  .book-page .page-footer {margin:0 9px;}
+  .home-intro h2,.section-title {font-size:clamp(22px,5vw,32px);}
+  .cards {gap:3px;}
+  .cards button {padding:5px 7px;}
+  .theme-grid {grid-template-columns:1fr;gap:3px;}
+  .theme-option {padding:4px 6px;}
+  .theme-swatch {width:18px;height:18px;}
+  .theme-text small {display:none;}
+}
