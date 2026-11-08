@@ -1,7 +1,5 @@
 # earth-power-n3
 
- # earth-power-n3
-
 ## 프로젝트 개요
 
 **earth-power-n3**는 Nginx 웹 서버를 기반으로 React + Vite + TypeScript FrontEnd 개발 환경을 구성한 프로젝트입니다.
