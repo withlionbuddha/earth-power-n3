@@ -1,4 +1,3 @@
-import type { PageId, ThemeId } from '../types/navigation'
 export default function InsightsPage() {
 return <>
     <div className="page-overline"><span>YOUR WORK, IN PERSPECTIVE</span><span className="quiet-status">SAMPLE DATA</span></div>

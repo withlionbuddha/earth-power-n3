@@ -1,4 +1,4 @@
-import type { PageId, ThemeId } from '../types/navigation'
+import type { ThemeId } from '../types/navigation'
 import { themes } from '../config/themes'
 export default function SettingsPage({ theme, onThemeChange }: { theme: ThemeId; onThemeChange: (t: ThemeId) => void }) {
 return <>
