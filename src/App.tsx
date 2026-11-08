@@ -104,6 +104,24 @@ export default function App() {
   const [loginBusy, setLoginBusy] = useState(false)
   const [loginNotice, setLoginNotice] = useState('')
   const loginInputRef = useRef<HTMLInputElement>(null)
+  const dockRef = useRef<HTMLElement>(null)
+  const overviewRef = useRef<HTMLSpanElement>(null)
+  useEffect(() => {
+    const alignHome = () => {
+      const dock = dockRef.current
+      const overview = overviewRef.current
+      if (!dock || !overview) return
+      const offset = overview.getBoundingClientRect().left - dock.getBoundingClientRect().left
+      dock.style.setProperty('--home-start', offset + 'px')
+    }
+    alignHome()
+    const observer = new ResizeObserver(alignHome)
+    if (dockRef.current) observer.observe(dockRef.current)
+    if (overviewRef.current) observer.observe(overviewRef.current)
+    window.addEventListener('resize', alignHome)
+    return () => { observer.disconnect(); window.removeEventListener('resize', alignHome) }
+  }, [])
+
   async function submitLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (loginBusy || loginStage === 'authenticated') return
@@ -197,10 +215,10 @@ export default function App() {
         <div className="book-spine" aria-hidden="true"/>
         <div aria-hidden="true" className={'flipping-sheet' + (turning ? ' flip' : '')}><div className="sheet-front"/><div className="sheet-back"/></div>
       </div>
-      <div className="page-arrows"><button disabled={subpage === 0} onClick={() => shift(-1)} aria-label="Previous subpage">←</button><span>{subpages[current][subpage]} · {subpage + 1}/{subpages[current].length}</span><button disabled={subpage === subpages[current].length - 1} onClick={() => shift(1)} aria-label="Next subpage">→</button></div>
+      <div className="page-arrows"><button disabled={subpage === 0} onClick={() => shift(-1)} aria-label="Previous subpage">←</button><span ref={overviewRef}>{subpages[current][subpage]} · {subpage + 1}/{subpages[current].length}</span><button disabled={subpage === subpages[current].length - 1} onClick={() => shift(1)} aria-label="Next subpage">→</button></div>
     </section>
     {Array.from({ length: 4 }, (_, i) => <section key={i} className="empty-screen screen-panel" aria-label={`Empty full screen ${i + 1}`}><span className="empty-screen-label">CANVAS 0{i + 2}</span></section>)}
     </div>
-    <nav className="bottom-menu" aria-label="Main navigation"><div className="menu-login"><span className="menu-mark" aria-label="Earth Power">e.</span><form className="login-form" onSubmit={submitLogin}><div className="login-field"><input ref={loginInputRef} aria-label={loginStage === 'password' ? 'Password' : 'Login ID'} autoComplete={loginStage === 'password' ? 'current-password' : 'username'} type={loginStage === 'password' ? 'password' : 'text'} placeholder={loginStage === 'password' ? 'Password' : loginStage === 'authenticated' ? loginId : 'Login ID'} value={loginStage === 'password' ? loginPassword : loginStage === 'authenticated' ? '' : loginId} onFocus={() => setLoginNotice('')} onChange={event => { if (loginStage === 'password') setLoginPassword(event.target.value); else setLoginId(event.target.value); setLoginNotice('') }} disabled={loginBusy || loginStage === 'authenticated'}/>{loginNotice && <span className="login-notice" role="status" onClick={() => { setLoginNotice(''); loginInputRef.current?.focus() }}>{loginNotice}</span>}</div><button type="submit" disabled={loginBusy || loginStage === 'authenticated'} aria-label={loginStage === 'id' ? 'Continue to password' : 'Sign in'} title={loginStage === 'id' ? 'Next' : 'Sign in'}>↵</button></form></div><div className="menu-links">{sections.map((s, i) => <button key={s.id} aria-current={current === s.id ? 'page' : undefined} className={current === s.id ? 'active' : ''} onClick={() => { navigate(s.id); goScreen(i) }}><small>0{i + 1}</small><span>{s.label}</span></button>)}</div><span className="menu-end">EXPLORE &nbsp; ✳</span></nav>
+    <nav ref={dockRef} className="bottom-menu" aria-label="Main navigation"><div className="menu-login"><span className="menu-mark" aria-label="Earth Power">e.</span><form className="login-form" onSubmit={submitLogin}><div className="login-field"><input ref={loginInputRef} aria-label={loginStage === 'password' ? 'Password' : 'Login ID'} autoComplete={loginStage === 'password' ? 'current-password' : 'username'} type={loginStage === 'password' ? 'password' : 'text'} placeholder={loginStage === 'password' ? 'Password' : loginStage === 'authenticated' ? loginId : 'Login ID'} value={loginStage === 'password' ? loginPassword : loginStage === 'authenticated' ? '' : loginId} onFocus={() => setLoginNotice('')} onChange={event => { if (loginStage === 'password') setLoginPassword(event.target.value); else setLoginId(event.target.value); setLoginNotice('') }} disabled={loginBusy || loginStage === 'authenticated'}/>{loginNotice && <span className="login-notice" role="status" onClick={() => { setLoginNotice(''); loginInputRef.current?.focus() }}>{loginNotice}</span>}</div><button type="submit" disabled={loginBusy || loginStage === 'authenticated'} aria-label={loginStage === 'id' ? 'Continue to password' : 'Sign in'} title={loginStage === 'id' ? 'Next' : 'Sign in'}>↵</button></form></div><div className="menu-links">{sections.map((s, i) => <button key={s.id} aria-current={current === s.id ? 'page' : undefined} className={current === s.id ? 'active' : ''} onClick={() => { navigate(s.id); goScreen(i) }}><small>0{i + 1}</small><span>{s.label}</span></button>)}</div><span className="menu-end">EXPLORE &nbsp; ✳</span></nav>
   </div>
 }
