@@ -9,12 +9,21 @@ const sections: { id: PageId; label: string; title: string; subtitle: string }[]
   { id: 'insights', label: 'Insights', title: 'See new patterns.', subtitle: 'A clearer view of the work taking shape.' },
   { id: 'settings', label: 'Settings', title: 'Your kind of space.', subtitle: 'Small choices, a more considered experience.' },
 ]
+type ThemeId = 'sage' | 'midnight' | 'ocean' | 'rose' | 'sand'
+const themes: { id: ThemeId; name: string; description: string; swatch: string }[] = [
+  { id: 'sage', name: 'Sage', description: 'Botanical green & warm paper', swatch: '#a2b6a1' },
+  { id: 'midnight', name: 'Midnight', description: 'Dark ink & silver', swatch: '#29344c' },
+  { id: 'ocean', name: 'Ocean', description: 'Deep blue & cool white', swatch: '#74a5bc' },
+  { id: 'rose', name: 'Rose', description: 'Dusty pink & soft cream', swatch: '#caa3a4' },
+  { id: 'sand', name: 'Sand', description: 'Warm clay & ivory', swatch: '#d2ad81' },
+]
+const themeStorageKey = 'earth-power-n3-theme'
 const sampleFiles = [
   { name: 'Project notes', desc: 'Ideas, plans and first thoughts', type: 'NOTEBOOK' },
   { name: 'Research references', desc: 'Readings and useful sources', type: 'COLLECTION' },
   { name: 'Design inspirations', desc: 'Visual language and mood', type: 'MOODBOARD' },
 ]
-function Interior({ id, navigate }: { id: PageId; navigate: (p: PageId) => void }) {
+function Interior({ id, navigate, theme, onThemeChange }: { id: PageId; navigate: (p: PageId) => void; theme: ThemeId; onThemeChange: (t: ThemeId) => void }) {
   const [search, setSearch] = useState('')
   const [message, setMessage] = useState('')
   const [chat, setChat] = useState<{ role: 'me' | 'ai'; text: string }[]>([
@@ -56,18 +65,31 @@ function Interior({ id, navigate }: { id: PageId; navigate: (p: PageId) => void 
     <div className="chart"><div className="chart-top"><strong>Creative momentum</strong><small>LAST 7 DAYS</small></div><div className="bars">{[49,72,61,89,64,95,77].map((v, i) => <div key={i}><span style={{ height: v + '%' }}/><small>{['M','T','W','T','F','S','S'][i]}</small></div>)}</div></div>
   </>
   return <>
-    <div className="page-overline"><span>WORKSPACE PREFERENCES</span><span className="quiet-status">DEMO MODE</span></div>
+    <div className="page-overline"><span>WORKSPACE PREFERENCES</span><span className="quiet-status">PERSONALIZE</span></div>
     <h2 className="section-title">Make it<br/><em>your own.</em></h2><p className="section-subtitle">A few details to shape your everyday flow.</p>
-    {[
-      ['Display language', 'English', 'The language of your interface'],
-      ['Visual palette', 'Editorial', 'Paper, sage, and deep ink'],
-      ['Page motion', 'Enabled', 'Book-inspired transitions'],
-    ].map(([name, value, desc]) => <div className="setting-row" key={name}><span><strong>{name}</strong><small>{desc}</small></span><span className="setting-tag">{value}</span></div>)}
-    <p className="demo-caption">Interface preview only. Preferences are not saved.</p>
+    <div className="theme-heading">Choose a design theme <span>LIVE PREVIEW</span></div>
+    <div className="theme-grid" role="group" aria-label="Design themes">
+      {themes.map(option => <button type="button" key={option.id} className={'theme-option' + (theme === option.id ? ' selected' : '')} aria-pressed={theme === option.id} onClick={() => onThemeChange(option.id)}>
+        <span className="theme-swatch" style={{ background: option.swatch }} aria-hidden="true" />
+        <span className="theme-text"><strong>{option.name}</strong><small>{option.description}</small></span>
+        <span className="theme-check" aria-hidden="true">{theme === option.id ? '✓' : '○'}</span>
+      </button>)}
+    </div>
+    <p className="demo-caption">The selected theme is saved in this browser. Other settings are a preview.</p>
   </>
 }
 
 export default function App() {
+  const [theme, setTheme] = useState<ThemeId>(() => {
+    try {
+      const stored = window.localStorage.getItem(themeStorageKey)
+      return themes.some(option => option.id === stored) ? stored as ThemeId : 'sage'
+    } catch { return 'sage' }
+  })
+  function changeTheme(next: ThemeId) {
+    setTheme(next)
+    try { window.localStorage.setItem(themeStorageKey, next) } catch { /* Storage may be disabled. */ }
+  }
   const [current, setCurrent] = useState<PageId>('home')
   const [visible, setVisible] = useState<PageId>('home')
   const [turning, setTurning] = useState(false)
@@ -93,7 +115,7 @@ export default function App() {
   function navigateNext(id: PageId) { setCurrent(id); setVisible(id) }
   useEffect(() => () => window.clearTimeout(timer.current), [])
   const shift = (direction: number) => navigate(sections[(index + direction + sections.length) % sections.length].id)
-  return <div className="app-shell">
+  return <div className="app-shell" data-theme={theme}>
     <div className="ambient-ring" aria-hidden="true"/>
     <section className="top-zone">
       <header className="topbar"><a className="brand" href="#home" onClick={e => { e.preventDefault(); navigate('home') }}><span className="brand-circle">e<span>.</span></span><strong>earth power <i>/ n3</i></strong></a><span className="topbar-center">A DIGITAL THINKING SPACE &nbsp; ✳</span><span className="topbar-end"><span className="status-dot"/> EXPLORATION MODE</span></header>
@@ -103,7 +125,7 @@ export default function App() {
       <div className="book-shadow"/>
       <div className="book">
         <div className="book-cover"><div className="book-topline"><span>THE EARTH POWER JOURNAL</span><span>VOL. 001</span></div><div className="orbit" aria-hidden="true"/><div className="cover-copy"><span>0{index + 1} / {page.label.toUpperCase()}</span><h2>{page.title.split(' ').slice(0, 2).join(' ')}<br/><em>{page.title.split(' ').slice(2).join(' ')}</em></h2><p>{page.subtitle}</p></div><div className="cover-footer"><span>EP / N3</span><span>AN INTERACTIVE NOTEBOOK</span></div></div>
-        <div className="book-page"><div className="page-inner" key={visible}><Interior id={visible} navigate={navigate}/></div><div className="page-footer"><span>EARTH POWER — DIGITAL STUDIO</span><span>0{index + 1} / 0{sections.length}</span></div></div>
+        <div className="book-page"><div className="page-inner" key={visible}><Interior id={visible} navigate={navigate} theme={theme} onThemeChange={changeTheme}/></div><div className="page-footer"><span>EARTH POWER — DIGITAL STUDIO</span><span>0{index + 1} / 0{sections.length}</span></div></div>
         <div className="book-spine" aria-hidden="true"/>
         <div aria-hidden="true" className={'flipping-sheet' + (turning ? ' flip' : '')}><div className="sheet-front"/><div className="sheet-back"/></div>
       </div>
