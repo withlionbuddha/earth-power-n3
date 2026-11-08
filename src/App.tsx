@@ -156,7 +156,7 @@ export default function App() {
       <header className="topbar"><a className="brand" href="#home" onClick={e => { e.preventDefault(); navigate('home'); goScreen(0) }}><span className="brand-circle">e<span>.</span></span><strong>earth power <i>/ n3</i></strong></a><span className="topbar-center">A DIGITAL THINKING SPACE &nbsp; ✳</span><span className="topbar-end"><span className="status-dot"/> EXPLORATION MODE</span></header>
       
     </section>
-    <div className="screen-stack" style={{ transform: `translateY(-${screen * 100}%)` }}>
+    <div className="screen-stack" style={{ transform: `translateY(-${screen * 20}%)` }}>
     <section className="book-zone screen-panel" aria-label="Interactive content pages">
       <div className="book-shadow"/>
       <div className="book">
