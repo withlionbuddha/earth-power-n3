@@ -202,3 +202,12 @@ html,body,#root,.app-shell,.book-zone,.book,.book-page {overscroll-behavior:none
   .theme-swatch {width:18px;height:18px;}
   .theme-text small {display:none;}
 }
+
+/* Center the book and dock on the same viewport axis. */
+.book-zone {display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;width:100%;margin-inline:auto;}
+.book-zone > .book {grid-column:1;grid-row:1;justify-self:center;align-self:stretch;width:min(1070px,100%);max-width:1070px;margin-inline:auto;flex:none;}
+.book-zone > .page-arrows {grid-column:1;grid-row:2;justify-self:center;}
+.bottom-menu {left:50%;right:auto;transform:translateX(-50%);margin:0;}
+@media(max-width:650px) {
+  .book-zone > .book {width:100%;max-width:100%;margin-inline:auto;}
+}
