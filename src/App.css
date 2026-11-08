@@ -357,3 +357,30 @@ html,body,#root,.app-shell,.book-zone,.book,.book-page {overscroll-behavior:none
   .bottom-menu .menu-links {left:50%;right:3px;}
   .bottom-menu .login-form input::placeholder {font-size:9px;}
 }
+
+/* Align Home with the central Overview control; reserve the left half
+   of the dock for the shared input and its inline status. */
+.bottom-menu {display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;}
+.bottom-menu .menu-login {grid-column:1;width:100%;min-width:0;display:flex;position:relative;}
+.bottom-menu .menu-links {grid-column:2;margin-left:0;width:100%;justify-content:flex-start;min-width:0;}
+.bottom-menu .login-form {width:100%;flex:1 1 auto;min-width:0;}
+.bottom-menu .login-form input {width:100%;min-width:0;text-overflow:ellipsis;}
+.bottom-menu .login-notice {
+  position:absolute;left:calc(27px + 10px);top:50%;bottom:auto;
+  transform:translateY(-50%);box-sizing:border-box;
+  width:calc(100% - 27px - 10px - 34px);max-width:none;min-width:0;
+  height:32px;padding:0 10px;display:flex;align-items:center;
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+  background:var(--theme-dock);border:1px solid #ffffff55;
+  border-radius:5px;box-shadow:none;color:var(--theme-dock-text);
+  font-size:10px;cursor:text;z-index:1;
+}
+@media(max-width:950px) {
+  .bottom-menu {column-gap:8px;}
+  .bottom-menu .login-notice {height:30px;}
+}
+@media(max-width:650px) {
+  .bottom-menu {grid-template-columns:minmax(0,1fr) auto;column-gap:5px;}
+  .bottom-menu .menu-links {width:auto;}
+  .bottom-menu .login-notice {left:calc(23px + 4px);width:calc(100% - 23px - 4px - 24px);height:27px;padding:0 5px;font-size:9px;}
+}
