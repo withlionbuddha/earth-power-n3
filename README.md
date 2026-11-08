@@ -30,7 +30,7 @@ Nginx
    ├── Dev Vite
    │      └── React + TypeScript
    │
-   └── Reference Vite
+   └── Reference Vite (option)
           └── React + TypeScript
 ```
 
