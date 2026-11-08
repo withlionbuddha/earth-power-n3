@@ -233,3 +233,31 @@ html,body,#root,.app-shell,.book-zone,.book,.book-page {overscroll-behavior:none
   .screen-stack > .book-zone > .book {width:100%;max-width:100%;}
 }
 @media(prefers-reduced-motion:reduce) {.screen-stack {transition:none;}}
+
+/* Compact login form beside the bottom-left mark. No credentials are stored. */
+.menu-login {display:flex;align-items:center;gap:9px;flex:0 1 auto;min-width:0;position:relative;}
+.menu-mark {font:27px/1 Georgia,serif;color:#eddfc6;white-space:nowrap;}
+.login-form {display:flex;align-items:center;gap:5px;min-width:0;}
+.login-form input {width:clamp(70px,9vw,125px);min-width:0;height:29px;border:1px solid #ffffff55;border-radius:5px;background:#ffffff12;padding:0 9px;color:var(--theme-dock-text);font-size:10px;outline-offset:1px;}
+.login-form input::placeholder {color:#d5d9d0b3;}
+.login-form button {height:29px;padding:0 10px;border:0;border-radius:5px;background:var(--theme-paper);color:var(--theme-primary);font-size:10px;font-weight:700;}
+.login-form button:hover {filter:brightness(.94);}
+.login-notice {position:absolute;bottom:calc(100% + 10px);left:0;min-width:190px;max-width:260px;background:var(--theme-dock);color:var(--theme-dock-text);padding:9px 11px;border-radius:6px;font-size:10px;box-shadow:0 5px 20px #0003;}
+@media(max-width:950px) {
+  .bottom-menu {gap:6px;padding:4px 8px;}
+  .menu-end {display:none;}
+  .menu-login {gap:5px;}
+  .login-form input {width:85px;}
+  .login-form button {padding:0 8px;}
+  .menu-links {gap:0;}
+  .menu-links button {padding:7px 7px;}
+}
+@media(max-width:650px) {
+  .menu-mark {font-size:23px;}
+  .menu-login {gap:4px;}
+  .login-form {gap:3px;}
+  .login-form input {width:62px;height:27px;padding:0 5px;font-size:9px;}
+  .login-form button {height:27px;padding:0 5px;font-size:9px;}
+  .menu-links button {padding:5px 3px;font-size:8px;gap:2px;}
+  .menu-links small {display:none;}
+}
