@@ -17,6 +17,13 @@ const themes: { id: ThemeId; name: string; description: string; swatch: string }
   { id: 'rose', name: 'Rose', description: 'Dusty pink & soft cream', swatch: '#caa3a4' },
   { id: 'sand', name: 'Sand', description: 'Warm clay & ivory', swatch: '#d2ad81' },
 ]
+const subpages: Record<PageId, string[]> = {
+  home: ['Overview', 'Discover', 'Highlights'],
+  studio: ['Conversation', 'Prompts', 'Experiments'],
+  library: ['Collections', 'Documents', 'References'],
+  insights: ['Overview', 'Activity', 'Reports'],
+  settings: ['Appearance', 'Preferences', 'About'],
+}
 const themeStorageKey = 'earth-power-n3-theme'
 const sampleFiles = [
   { name: 'Project notes', desc: 'Ideas, plans and first thoughts', type: 'NOTEBOOK' },
@@ -92,6 +99,10 @@ export default function App() {
   }
   const [current, setCurrent] = useState<PageId>('home')
   const [visible, setVisible] = useState<PageId>('home')
+  const [subpage, setSubpage] = useState(0)
+  const [screen, setScreen] = useState(0)
+  const screenRef = useRef(0)
+  const wheelLocked = useRef(false)
   const [turning, setTurning] = useState(false)
   const pending = useRef<PageId | null>(null)
   const timer = useRef<number | undefined>(undefined)
@@ -101,6 +112,7 @@ export default function App() {
     if (turning) { pending.current = id; return }
     if (id === current) return
     setCurrent(id)
+    setSubpage(0)
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setVisible(id); return }
     setTurning(true)
     timer.current = window.setTimeout(() => {
@@ -114,23 +126,49 @@ export default function App() {
   // A queued selection is applied after the previous animation finishes.
   function navigateNext(id: PageId) { setCurrent(id); setVisible(id) }
   useEffect(() => () => window.clearTimeout(timer.current), [])
-  const shift = (direction: number) => navigate(sections[(index + direction + sections.length) % sections.length].id)
+  const shift = (direction: number) => {
+    const count = subpages[current].length
+    setSubpage(value => Math.max(0, Math.min(count - 1, value + direction)))
+  }
+  function goScreen(next: number) {
+    const clamped = Math.max(0, Math.min(4, next))
+    screenRef.current = clamped
+    setScreen(clamped)
+  }
+  useEffect(() => {
+    const onWheel = (event: WheelEvent) => {
+      if (event.ctrlKey || Math.abs(event.deltaY) < 5) return
+      event.preventDefault()
+      if (wheelLocked.current) return
+      const direction = event.deltaY < 0 ? 1 : -1
+      const next = Math.max(0, Math.min(4, screenRef.current + direction))
+      if (next === screenRef.current) return
+      goScreen(next)
+      wheelLocked.current = true
+      window.setTimeout(() => { wheelLocked.current = false }, 750)
+    }
+    window.addEventListener('wheel', onWheel, { passive: false })
+    return () => window.removeEventListener('wheel', onWheel)
+  }, [])
   return <div className="app-shell" data-theme={theme}>
     <div className="ambient-ring" aria-hidden="true"/>
     <section className="top-zone">
-      <header className="topbar"><a className="brand" href="#home" onClick={e => { e.preventDefault(); navigate('home') }}><span className="brand-circle">e<span>.</span></span><strong>earth power <i>/ n3</i></strong></a><span className="topbar-center">A DIGITAL THINKING SPACE &nbsp; ✳</span><span className="topbar-end"><span className="status-dot"/> EXPLORATION MODE</span></header>
+      <header className="topbar"><a className="brand" href="#home" onClick={e => { e.preventDefault(); navigate('home'); goScreen(0) }}><span className="brand-circle">e<span>.</span></span><strong>earth power <i>/ n3</i></strong></a><span className="topbar-center">A DIGITAL THINKING SPACE &nbsp; ✳</span><span className="topbar-end"><span className="status-dot"/> EXPLORATION MODE</span></header>
       
     </section>
-    <section className="book-zone" aria-label="Interactive content pages">
+    <div className="screen-stack" style={{ transform: `translateY(-${screen * 100}%)` }}>
+    <section className="book-zone screen-panel" aria-label="Interactive content pages">
       <div className="book-shadow"/>
       <div className="book">
         <div className="book-cover"><div className="book-topline"><span>THE EARTH POWER JOURNAL</span><span>VOL. 001</span></div><div className="orbit" aria-hidden="true"/><div className="cover-copy"><span>0{index + 1} / {page.label.toUpperCase()}</span><h2>{page.title.split(' ').slice(0, 2).join(' ')}<br/><em>{page.title.split(' ').slice(2).join(' ')}</em></h2><p>{page.subtitle}</p></div><div className="cover-footer"><span>EP / N3</span><span>AN INTERACTIVE NOTEBOOK</span></div></div>
-        <div className="book-page"><div className="page-inner" key={visible}><Interior id={visible} navigate={navigate} theme={theme} onThemeChange={changeTheme}/></div><div className="page-footer"><span>EARTH POWER — DIGITAL STUDIO</span><span>0{index + 1} / 0{sections.length}</span></div></div>
+        <div className="book-page"><div className="page-inner" key={visible + '-' + subpage}>{subpage === 0 ? <Interior id={visible} navigate={navigate} theme={theme} onThemeChange={changeTheme}/> : <div className="subpage-placeholder"><span>0{subpage + 1} / {subpages[visible].length.toString().padStart(2,'0')}</span><h2>{subpages[visible][subpage]}</h2><p>This page is ready for new content.</p></div>}</div><div className="page-footer"><span>EARTH POWER — DIGITAL STUDIO</span><span>0{subpage + 1} / 0{subpages[current].length}</span></div></div>
         <div className="book-spine" aria-hidden="true"/>
         <div aria-hidden="true" className={'flipping-sheet' + (turning ? ' flip' : '')}><div className="sheet-front"/><div className="sheet-back"/></div>
       </div>
-      <div className="page-arrows"><button onClick={() => shift(-1)} aria-label="Previous page">←</button><span>TURN THE PAGE</span><button onClick={() => shift(1)} aria-label="Next page">→</button></div>
+      <div className="page-arrows"><button disabled={subpage === 0} onClick={() => shift(-1)} aria-label="Previous subpage">←</button><span>{subpages[current][subpage]} · {subpage + 1}/{subpages[current].length}</span><button disabled={subpage === subpages[current].length - 1} onClick={() => shift(1)} aria-label="Next subpage">→</button></div>
     </section>
-    <nav className="bottom-menu" aria-label="Main navigation"><span className="menu-identity"><b>e.</b><span>THE WORKSPACE</span></span><div className="menu-links">{sections.map((s, i) => <button key={s.id} aria-current={current === s.id ? 'page' : undefined} className={current === s.id ? 'active' : ''} onClick={() => navigate(s.id)}><small>0{i + 1}</small><span>{s.label}</span></button>)}</div><span className="menu-end">EXPLORE &nbsp; ✳</span></nav>
+    {Array.from({ length: 4 }, (_, i) => <section key={i} className="empty-screen screen-panel" aria-label={`Empty full screen ${i + 1}`}><span className="empty-screen-label">CANVAS 0{i + 2}</span></section>)}
+    </div>
+    <nav className="bottom-menu" aria-label="Main navigation"><span className="menu-identity"><b>e.</b><span>THE WORKSPACE</span></span><div className="menu-links">{sections.map((s, i) => <button key={s.id} aria-current={current === s.id ? 'page' : undefined} className={current === s.id ? 'active' : ''} onClick={() => { navigate(s.id); goScreen(i) }}><small>0{i + 1}</small><span>{s.label}</span></button>)}</div><span className="menu-end">EXPLORE &nbsp; ✳</span></nav>
   </div>
 }
