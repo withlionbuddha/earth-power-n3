@@ -121,3 +121,23 @@ html,body,#root {height:100%;min-height:0;overflow:hidden;}
   .book-zone {height:100%;min-height:0;padding:4px 8px 51px;}
   .book {height:100%;min-height:0;max-height:100%;}
 }
+
+/* Scrollbar regression fix: reserve separate rows for the book and page controls. */
+:root,html,body,#root {width:100%;height:100%;max-height:100%;margin:0;overflow:hidden;overscroll-behavior:none;}
+.app-shell {position:relative;width:100%;height:100vh;height:100dvh;max-height:100dvh;min-height:0;overflow:hidden;display:grid;grid-template-rows:48px minmax(0,1fr);}
+.top-zone {min-height:0;max-height:48px;overflow:hidden;}
+.topbar {height:48px;min-height:0;}
+.book-zone {box-sizing:border-box;display:grid;grid-template-rows:minmax(0,1fr) 30px;justify-items:center;align-items:stretch;gap:4px;min-height:0;height:100%;max-height:100%;padding:6px clamp(12px,4.5vw,82px) 61px;overflow:hidden;}
+.book {box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);width:min(1280px,100%);height:100%;min-height:0;max-height:100%;flex:none;align-self:stretch;overflow:visible;}
+.book-cover,.book-page {min-height:0;min-width:0;}
+.page-arrows {align-self:center;justify-self:center;margin:0;height:30px;min-height:0;}
+.page-inner {box-sizing:border-box;height:100%;min-height:0;max-height:100%;overflow-y:auto;overflow-x:hidden;}
+.book-shadow {bottom:91px;}
+@media(max-width:650px) {
+  .app-shell {grid-template-rows:42px minmax(0,1fr);}
+  .top-zone {max-height:42px;}
+  .topbar {height:42px;min-height:0;}
+  .book-zone {grid-template-rows:minmax(0,1fr) 26px;gap:3px;padding:4px 8px 53px;}
+  .book {grid-template-columns:minmax(0,34fr) minmax(0,66fr);height:100%;min-height:0;max-height:100%;}
+  .page-arrows {height:26px;}
+}
