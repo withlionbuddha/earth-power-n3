@@ -38,14 +38,14 @@ AI를 활용하여 화면 구성과 컴포넌트 구현, 리팩터링 및 테스
 Browser
    |
    v
-Nginx (:8080)
-   |-- /       --> Dev Vite (:8183) --> React UI
+Nginx HTTPS (:443)
+   |-- /       --> Dev Vite (:83) --> React UI
    |
    +-- /api/*  --> Tomcat (:8080) --> Backend Services
 
 ```
 
-위 포트 및 라우팅은 서버 인프라 저장소 README에 제시된 **기본 개발 환경 구성**입니다. 운영 환경에서는 Vite 개발 서버 대신 빌드된 정적 파일을 제공하도록 별도 설정 및 검증이 필요합니다.
+위 포트는 인프라 저장소의 현재 Compose 및 .env.example 기준입니다. Nginx는 HTTP 80을 HTTPS 443으로 리디렉션합니다. Tomcat은 컨테이너 및 호스트 기본 포트가 모두 8080입니다. 운영 환경에서는 Vite 개발 서버 대신 빌드된 정적 파일을 제공하도록 별도 설정 및 검증이 필요합니다.
 
 ### 저장소 구성 예시
 
@@ -69,12 +69,14 @@ WEB_UI_SOURCE_PATH=../earth-power-n3
 cd nginx-vite-tomcat-env
 Copy-Item .env.example .env
 # .env 파일의 WEB_UI_SOURCE_PATH를 실제 earth-power-n3 경로로 설정
-docker compose -f docker-compose.dev.no-reference.yml config
-docker compose -f docker-compose.dev.no-reference.yml up --build -d
-docker compose -f docker-compose.dev.no-reference.yml ps
+docker compose -f docker-compose.dev.yml config
+docker compose -f docker-compose.dev.yml up --build -d
+docker compose -f docker-compose.dev.yml ps
 ```
 
-개발 환경의 기본 접속 주소는 `http://localhost:8080`(Nginx), `http://localhost:8183`(Dev Vite), `http://localhost:18080`(Tomcat 상태 확인)입니다. 실제 접속 가능 여부는 컨테이너 기동 및 환경 설정에 따라 달라집니다.
+개발 환경의 기본 접속 주소는 `https://localhost`(Nginx 443), `http://localhost:83`(Vite), `http://localhost:8080`(Tomcat 직접 확인)입니다. Nginx HTTP 80은 HTTPS로 리디렉션됩니다. 실제 접속 가능 여부는 컨테이너 기동 및 환경 설정에 따라 달라집니다.
+
+Nginx TLS 인증서와 개인키는 인프라 저장소의 `SSL_SOURCE_DIR_PATH`를 통해 읽기 전용 마운트합니다. 생성 방법은 [로컬 HTTPS PEM 인증서 가이드](docs/LOCAL_HTTPS_PEM.md)를 참고합니다.
 
 API 경로는 Nginx의 `/api/*` 프록시를 기준으로 연동합니다. 기존 프론트엔드 환경 설정 및 별도 API 대상 서버를 사용하는 경우, 프록시 대상과 HTTPS 인증서 신뢰 설정의 일치 여부를 검증해야 합니다.
 
