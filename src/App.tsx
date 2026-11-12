@@ -5,6 +5,7 @@ import BottomMenu from './components/BottomMenu'
 import Book from './components/Book'
 import { useTheme } from './hooks/useTheme'
 import { useBookNavigation } from './hooks/useBookNavigation'
+
 export default function App() {
   const { theme, changeTheme } = useTheme()
   const { current, visible, subpage, screen, turning, index, page, navigate, shift, goScreen } = useBookNavigation()

@@ -2,8 +2,15 @@
 const apiRoot = (import.meta.env.VITE_API_BASE_PATH || '/api').replace(/\/$/, '')
 let accessToken: string | null = null
 let refreshPromise: Promise<string> | null = null
+
 export class HttpError extends Error {
-  constructor(readonly status: number, message: string) { super(message); this.name = 'HttpError' }
+  readonly status: number
+
+  constructor(status: number, message: string) { 
+    super(message); 
+    this.name = 'HttpError'
+    this.status = status 
+  }
 }
 export function setAccessToken(value: string): void { accessToken = value }
 export function clearAccessToken(): void { accessToken = null }
