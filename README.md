@@ -38,7 +38,7 @@ Static Web Application은 웹 서버가 미리 빌드된 HTML, CSS, JavaScript, 
 | REST API 호출 및 응답 표시 | 포함 | 브라우저에서 호출, Nginx가 API 프록시 |
 | API 기반 인증·데이터 조회·수정 | 포함 | 브라우저와 Backend API 간 통신 |
 | 서버 측 HTML 렌더링(SSR) | 정적 배포 범위 밖 | 별도 서버 런타임 필요 |
-| 서버 측 비즈니스 로직·DB 직접 접근 | 프론트엔드 범위 밖 | Backend/WAS 담당 |
+| 서버 측 요청 처리 | 프론트엔드 범위 밖 | Tomcat이 HTTP 요청을 수신·전달하고 서버 애플리케이션을 실행 |
 
 **API를 호출하거나 API 응답으로 화면을 동적으로 변경해도 정적 웹 애플리케이션으로 분류할 수 있습니다.** 정적이라는 표현은 화면 내용이 고정된다는 의미가 아니라, 서버가 제공하는 프론트엔드 파일이 빌드된 정적 리소스라는 의미입니다.
 
@@ -71,7 +71,7 @@ Browser (React SPA)
 1. 브라우저가 HTTPS로 Nginx에 접속하여 HTML, CSS, JavaScript 등 정적 리소스를 요청합니다.
 2. 브라우저가 받은 JavaScript를 실행하여 React SPA를 렌더링합니다.
 3. React 코드가 `fetch` 등의 API로 `/api/users`를 호출합니다. **API 요청의 실제 발신자는 브라우저**입니다.
-4. Nginx가 `/api/*` 요청을 Tomcat의 Backend API로 프록시합니다.
+4. Nginx가 `/api/*` 요청을 Tomcat으로 프록시합니다. Tomcat은 요청을 수신하고 배포된 서버 애플리케이션에 전달하여 응답을 처리합니다.
 5. API 응답은 Tomcat → Nginx → 브라우저로 돌아오며, React가 응답에 따라 화면을 갱신합니다.
 
 개발 환경에서는 아래와 같이 정적 파일 대신 Vite 개발 서버를 사용합니다.
