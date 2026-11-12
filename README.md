@@ -82,7 +82,7 @@ Browser -- HTTPS --> Nginx :443
                         +-- /api/* --> Tomcat :8080 --> Backend API
 ```
 
-인프라 저장소의 현재 `docker-compose.dev.yml` 및 `.env.example` 기준으로 Nginx HTTP 80은 HTTPS 443으로 리디렉션되며, Tomcat의 호스트 및 컨테이너 기본 포트는 모두 8080입니다. **운영 환경에서 Nginx가 실제 `dist/` 파일을 직접 제공하는지는 별도 배포 설정과 검증이 필요합니다.**
+**[nginx-vite-tomcat-env](https://github.com/withlionbuddha/nginx-vite-tomcat-env)** 저장소의 `docker-compose.dev.yml` 및 `.env.example` 기준으로 Nginx HTTP 80은 HTTPS 443으로 리디렉션되며, Tomcat의 호스트 및 컨테이너 기본 포트는 모두 8080입니다. **운영 환경에서 Nginx가 실제 `dist/` 파일을 직접 제공하는지는 별도 배포 설정과 검증이 필요합니다.**
 
 ### 저장소 구성 예시
 
@@ -92,7 +92,7 @@ workspace/
 └── nginx-vite-tomcat-env/  # Nginx / Vite / Tomcat / Docker Compose
 ```
 
-인프라 저장소의 `.env`에서 개발용 React 소스 경로를 연결합니다.
+**[nginx-vite-tomcat-env](https://github.com/withlionbuddha/nginx-vite-tomcat-env)** 저장소의 `.env`에서 개발용 React 소스 경로를 연결합니다.
 
 ```dotenv
 WEB_UI_SOURCE_PATH=../earth-power-n3
@@ -111,9 +111,11 @@ docker compose -f docker-compose.dev.yml up --build -d
 docker compose -f docker-compose.dev.yml ps
 ```
 
-개발 환경의 기본 접속 주소는 `https://localhost`(Nginx 443), `http://localhost:83`(Vite), `http://localhost:8080`(Tomcat 직접 확인)입니다. Nginx HTTP 80은 HTTPS로 리디렉션됩니다. 실제 접속 가능 여부는 컨테이너 기동 및 환경 설정에 따라 달라집니다.
+개발 환경의 기본 접속 주소는 `https://localhost`(Nginx 443), `http://localhost:83`(Vite), `http://localhost:8080`(Tomcat 직접 확인)입니다.  
+Nginx HTTP 80은 HTTPS로 리디렉션됩니다. 실제 접속 가능 여부는 컨테이너 기동 및 환경 설정에 따라 달라집니다.
 
-Nginx TLS 인증서와 개인키는 인프라 저장소의 `SSL_SOURCE_DIR_PATH`를 통해 읽기 전용 마운트합니다. 생성 방법은 [로컬 HTTPS PEM 인증서 가이드](docs/LOCAL_HTTPS_PEM.md)를 참고합니다.
+Nginx TLS 인증서와 개인키는 **[nginx-vite-tomcat-env](https://github.com/withlionbuddha/nginx-vite-tomcat-env)** 저장소의 `SSL_SOURCE_DIR_PATH`를 통해 읽기 전용 마운트합니다.  
+생성 방법은 [로컬 HTTPS PEM 인증서 가이드](docs/LOCAL_HTTPS_PEM.md)를 참고합니다.
 
 API 경로는 Nginx의 `/api/*` 프록시를 기준으로 연동합니다. 기존 프론트엔드 환경 설정 및 별도 API 대상 서버를 사용하는 경우, 프록시 대상과 HTTPS 인증서 신뢰 설정의 일치 여부를 검증해야 합니다.
 
@@ -128,7 +130,8 @@ npm run lint
 npm run build
 ```
 
-의존성 설치 시 기존 lockfile 및 선택한 패키지 매니저의 일관성을 유지합니다. Docker Compose 기반 개발 서버를 사용할 때에는 인프라 저장소에서 Vite를 실행하므로 로컬 Vite 서버를 중복 실행할 필요가 없습니다.
+의존성 설치 시 기존 lockfile 및 선택한 패키지 매니저의 일관성을 유지합니다.  
+Docker Compose 기반 개발 서버를 사용할 때에는 인프라 저장소에서 Vite를 실행하므로 로컬 Vite 서버를 중복 실행할 필요가 없습니다.
 
 ## 7. Vibe Coding 작업 원칙
 
