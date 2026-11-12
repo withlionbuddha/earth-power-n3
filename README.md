@@ -119,6 +119,35 @@ Nginx TLS 인증서와 개인키는 **[nginx-vite-tomcat-env](https://github.com
 
 API 경로는 Nginx의 `/api/*` 프록시를 기준으로 연동합니다. 기존 프론트엔드 환경 설정 및 별도 API 대상 서버를 사용하는 경우, 프록시 대상과 HTTPS 인증서 신뢰 설정의 일치 여부를 검증해야 합니다.
 
+## 재사용 UI 컴포넌트
+
+`src/components/ui/`에는 기존 `App.css`의 테마 변수(`--theme-primary`, `--theme-ink`, `--theme-soft` 등)를 재사용하는 공통 UI 컴포넌트를 배치합니다. 기존 화면은 변경하지 않았으며 필요한 페이지에서 점진적으로 적용합니다.
+
+```text
+src/components/ui/
+├── Button.tsx   # Primary/Secondary/Outline/Danger/Ghost 버튼
+├── Input.tsx    # 레이블·도움말·오류 표시를 제공하는 입력칸
+├── Table.tsx    # 제네릭 데이터 및 열 렌더러를 사용하는 테이블
+├── ui.css       # 테마 연동·반응형 UI 스타일
+└── index.ts     # 공통 export
+```
+
+```tsx
+import { Button, Input, Table, type TableColumn } from './components/ui'
+
+type Item = { id: number; title: string }
+const columns: TableColumn<Item>[] = [
+  { key: 'title', header: '제목', render: item => item.title },
+]
+
+// 컴포넌트 내부 사용 예:
+// <Button variant="primary">저장</Button>
+// <Input label="제목" placeholder="제목 입력" />
+// <Table caption="항목 목록" columns={columns} rows={items} getRowKey={item => item.id} />
+```
+
+Button은 disabled/loading, Input은 접근성 레이블·검증 오류, Table은 빈 목록 및 가로 스크롤을 지원합니다. CSS는 상위 `data-theme`에서 정의되는 테마 변수를 상속합니다. 화면 연결과 실제 빌드 검증은 별도로 수행해야 합니다.
+
 ## 6. 로컬 개발 및 검증
 
 React 프로젝트 디렉터리에서 다음 명령으로 개발하거나 검증할 수 있습니다.
