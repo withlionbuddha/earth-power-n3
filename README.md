@@ -1,4 +1,4 @@
-# Vibe Coding 기반 React Static Web Application 개발
+# React가 처음일때! Vibe Coding 기반 React Static Web Application 개발
 
 ## 1. 프로젝트 개요
 
