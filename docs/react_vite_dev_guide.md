@@ -253,8 +253,7 @@ export default defineConfig({
    ▼
 Nginx (리버스 프록시)
    ├── /            → Dev Vite :5173
-   ├── /reference/  → Reference Vite :5173
-   └── /api/        → Spring Boot/Tomcat :8181
+   └── /api/        → Spring Boot/Tomcat :8080
 ```
 
 위 경로는 **설계 예시**입니다. `/reference/`로 제공하려면 Reference Vite의 `base: '/reference/'`와 Nginx의 프록시 경로 처리가 일치해야 합니다. HMR을 유지하려면 WebSocket 업그레이드 전달 및 필요시 `server.hmr` 설정도 맞춰야 합니다.
