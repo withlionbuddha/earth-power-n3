@@ -243,9 +243,9 @@ export default defineConfig({
 | `base` | 애플리케이션 기본 URL 경로 |
 | `build.outDir` | 빌드 출력 경로 |
 
-## 4. Nginx + Dev Vite + Reference Vite 구성
+## 4. Nginx + Dev Vite 구성
 
-개발 환경에서 Nginx를 단일 진입점으로 사용하고, 두 Vite 서버를 별도 컨테이너로 실행할 수 있습니다.
+개발 환경에서 Nginx를 단일 진입점으로 사용하고, Vite 서버를 별도 컨테이너로 실행할 수 있습니다.
 
 ```text
 브라우저
@@ -256,9 +256,9 @@ Nginx (리버스 프록시)
    └── /api/        → Spring Boot/Tomcat :8080
 ```
 
-위 경로는 **설계 예시**입니다. `/reference/`로 제공하려면 Reference Vite의 `base: '/reference/'`와 Nginx의 프록시 경로 처리가 일치해야 합니다. HMR을 유지하려면 WebSocket 업그레이드 전달 및 필요시 `server.hmr` 설정도 맞춰야 합니다.
+위 경로는 **설계 예시**입니다.  HMR을 유지하려면 WebSocket 업그레이드 전달 및 필요시 `server.hmr` 설정도 맞춰야 합니다.
 
-두 Vite 컨테이너는 서로 다른 네트워크 주소를 사용하므로 컨테이너 내부 포트를 모두 `5173`으로 설정해도 됩니다. 일반적으로 외부 공개는 Nginx에 집중하고 Vite는 내부 네트워크에서 통신하도록 구성합니다.
+일반적으로 외부 공개는 Nginx에 집중하고 Vite는 내부 네트워크에서 통신하도록 구성합니다.
 
 ### 개발 시 요청 흐름
 
